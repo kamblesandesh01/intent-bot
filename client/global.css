@@ -1,0 +1,151 @@
+/** @import must precede all other statements */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /**
+   * Tailwind CSS theme for Intent-Based Chatbot
+   * Purple/Blue vibrant theme
+   * tailwind.config.ts expects the following color variables to be expressed as HSL values.
+  */
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 240 10% 15%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 15%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 15%;
+
+    --primary: 280 85% 50%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 220 90% 55%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 240 15% 88%;
+    --muted-foreground: 240 10% 35%;
+
+    --accent: 45 100% 50%;
+    --accent-foreground: 240 10% 15%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 240 15% 88%;
+    --input: 240 15% 92%;
+    --ring: 280 85% 50%;
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 250 20% 96%;
+    --sidebar-foreground: 240 10% 15%;
+    --sidebar-primary: 280 85% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220 90% 92%;
+    --sidebar-accent-foreground: 240 10% 15%;
+    --sidebar-border: 240 15% 88%;
+    --sidebar-ring: 280 85% 50%;
+  }
+
+  .dark {
+    --background: 240 10% 8%;
+    --foreground: 240 15% 95%;
+
+    --card: 240 10% 14%;
+    --card-foreground: 240 15% 95%;
+
+    --popover: 240 10% 14%;
+    --popover-foreground: 240 15% 95%;
+
+    --primary: 280 90% 60%;
+    --primary-foreground: 240 10% 8%;
+
+    --secondary: 220 90% 65%;
+    --secondary-foreground: 240 10% 8%;
+
+    --muted: 240 10% 25%;
+    --muted-foreground: 240 15% 70%;
+
+    --accent: 45 100% 60%;
+    --accent-foreground: 240 10% 8%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 240 10% 20%;
+    --input: 240 10% 20%;
+    --ring: 280 90% 60%;
+
+    --sidebar-background: 240 10% 10%;
+    --sidebar-foreground: 240 15% 90%;
+    --sidebar-primary: 280 90% 60%;
+    --sidebar-primary-foreground: 240 10% 8%;
+    --sidebar-accent: 240 10% 22%;
+    --sidebar-accent-foreground: 240 15% 90%;
+    --sidebar-border: 240 10% 20%;
+    --sidebar-ring: 280 90% 60%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    overflow-x: hidden;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: "Inter", sans-serif;
+    overflow-x: hidden;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  :where(p, span, li, h1, h2, h3, h4, h5, h6, a, button, label, td, th) {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  pre,
+  code {
+    overflow-x: auto;
+    white-space: pre;
+  }
+
+  h1 {
+    @apply text-4xl font-bold tracking-tight;
+  }
+
+  h2 {
+    @apply text-2xl font-semibold tracking-tight;
+  }
+
+  h3 {
+    @apply text-xl font-semibold;
+  }
+}
+
+@layer components {
+  .gradient-blur {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+  }
+
+  .chat-bubble {
+    @apply rounded-2xl px-5 py-3.5 max-w-xs w-fit break-words;
+  }
+
+  .chat-bubble-user {
+    @apply chat-bubble bg-primary text-primary-foreground ml-auto;
+  }
+
+  .chat-bubble-assistant {
+    @apply chat-bubble bg-muted text-foreground;
+  }
+}
