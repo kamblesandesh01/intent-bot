@@ -12,6 +12,111 @@ Before deploying, ensure you have:
 
 ---
 
+## Netlify + API Platform (Full-Stack)
+
+**Better Alternative:** Netlify is primarily for static/frontend hosting. For a full-stack app with Express backend, you have two options:
+
+### Option A: Frontend on Netlify + Backend on Render (Recommended)
+
+This splits your app:
+- **Frontend (React):** Netlify (free)
+- **Backend (Express API):** Render (free)
+
+#### Step 1: Build Frontend for Netlify
+
+Create a build script that only builds the client:
+
+```bash
+# Update package.json scripts:
+"build:client": "vite build",
+"build:server": "tsc server/index.ts --outDir dist/server",
+```
+
+Or update the main build to output client to `dist/client`:
+
+```bash
+# vite.config.ts - ensure client output is in dist/client
+```
+
+#### Step 2: Deploy Backend to Render
+- Follow Render steps above
+- Get API URL: `https://backend-xxxx.onrender.com`
+
+#### Step 3: Deploy Frontend to Netlify
+
+1. Go to [netlify.com](https://netlify.com)
+2. Sign up with GitHub
+3. Click **"Add new site → Import an existing project"**
+4. Connect your GitHub repo
+5. Configure:
+   - **Build command:** `pnpm run build:client` (or adjust as needed)
+   - **Publish directory:** `dist/client` or `dist`
+   - **Environment:** Add `VITE_API_URL=https://backend-xxxx.onrender.com`
+6. Deploy!
+
+#### Step 4: Update API Calls
+Update `.env` in your repo:
+
+```
+VITE_API_URL=https://backend-xxxx.onrender.com
+```
+
+And in client code, use:
+```typescript
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+const response = await fetch(`${API_URL}/api/endpoint`);
+```
+
+---
+
+### Option B: Full-Stack on Netlify (Using Functions)
+
+Netlify Functions are serverless backend endpoints. This is more complex but keeps everything in one place.
+
+**Pros:** Single deployment, single domain
+**Cons:** Serverless cold starts, limited to Netlify Functions API
+
+We already have `netlify/functions/api.ts` set up! Steps:
+
+1. Push to GitHub
+2. Sign up at [netlify.com](https://netlify.com)
+3. Connect your repository
+4. Netlify auto-detects `netlify.toml`
+5. Configure:
+   - **Build:** `pnpm build`
+   - **Publish:** `dist`
+6. Deploy!
+
+Check `netlify.toml` to ensure it's configured:
+
+```toml
+[build]
+  command = "pnpm build"
+  functions = "netlify/functions"
+  publish = "dist"
+
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/api/:splat"
+  status = 200
+```
+
+---
+
+## Recommended Setup for IntentBot
+
+Given your full-stack architecture (Express + React), **I recommend:**
+
+| Component | Platform | Reason |
+|-----------|----------|--------|
+| React Frontend | **Netlify** | Optimized for static sites, instant deploys |
+| Express Backend | **Render** | Better for Node.js servers, persistent connections |
+| Database | **MongoDB Atlas** | Works with both |
+
+**Total Cost:** FREE (with generous free tiers)
+
+---
+
 ## Recommended: Render.com (Easiest)
 
 **Why Render?** Full-stack support, simple GitHub integration, free tier includes web service + free database hosting.
