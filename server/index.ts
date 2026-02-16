@@ -74,8 +74,8 @@ export function createServer() {
 
   app.use(express.static(distPath));
 
-  // SPA fallback: serve index.html for non-API routes (React Router support)
-  app.get("*", (_req, res) => {
+  // SPA fallback middleware: serve index.html for non-API routes (React Router support)
+  app.use((_req, res) => {
     res.sendFile(path.join(distPath, "index.html"));
   });
 
