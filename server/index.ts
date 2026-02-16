@@ -2,6 +2,7 @@ import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import path from "path";
 import { connectDB } from "./db";
 import { validateEnv } from "./env";
 import { authMiddleware } from "./middleware/auth";
@@ -40,6 +41,10 @@ export function createServer() {
   app.use(express.urlencoded({ extended: true, limit: "2mb" }));
   app.use(cookieParser());
 
+  // Serve static files from dist/spa
+  const clientDir = path.join(process.cwd(), "dist/spa");
+  app.use(express.static(clientDir));
+
   // Example API routes
   app.get("/api/ping", (_req, res) => {
     const ping = process.env.PING_MESSAGE ?? "ping";
@@ -64,6 +69,11 @@ export function createServer() {
   app.post("/api/conversations/:conversationId/messages", authMiddleware, addMessage);
   app.delete("/api/conversations/:conversationId", authMiddleware, deleteConversation);
   app.patch("/api/conversations/:conversationId", authMiddleware, updateConversationTitle);
+
+  // SPA fallback: serve index.html for all non-API routes
+  app.get("*", (_req, res) => {
+    res.sendFile(path.join(clientDir, "index.html"));
+  });
 
   return app;
 }
