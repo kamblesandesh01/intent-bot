@@ -3,6 +3,7 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import path from "path";
+import { fileURLToPath } from "url";
 import { connectDB } from "./db";
 import { validateEnv } from "./env";
 import { authMiddleware } from "./middleware/auth";
@@ -65,6 +66,18 @@ export function createServer() {
   app.post("/api/conversations/:conversationId/messages", authMiddleware, addMessage);
   app.delete("/api/conversations/:conversationId", authMiddleware, deleteConversation);
   app.patch("/api/conversations/:conversationId", authMiddleware, updateConversationTitle);
+
+  // Serve static SPA files from dist/spa
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = path.dirname(__filename);
+  const distPath = path.resolve(__dirname, "../spa");
+
+  app.use(express.static(distPath));
+
+  // SPA fallback: serve index.html for non-API routes (React Router support)
+  app.get("*", (_req, res) => {
+    res.sendFile(path.join(distPath, "index.html"));
+  });
 
   return app;
 }
